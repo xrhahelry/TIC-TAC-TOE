@@ -35,23 +35,23 @@ def draw_board():
             count += 1
 
 
-def equals3(a, b, c):
+def check_3(a, b, c):
     return a == b and b == c and a != ""
 
 
 def check_win():
     for i in range(0, 3):
-        if equals3(board[0][i], board[1][i], board[2][i]):
+        if check_3(board[0][i], board[1][i], board[2][i]):
             return board[0][i] 
 
     for i in range(0, 3):
-        if equals3(board[i][0], board[i][1], board[i][2]):
+        if check_3(board[i][0], board[i][1], board[i][2]):
             return board[i][0]
 
-    if equals3(board[0][0], board[1][1], board[2][2]):
+    if check_3(board[0][0], board[1][1], board[2][2]):
         return board[1][1] 
 
-    if equals3(board[2][0], board[1][1], board[0][2]):
+    if check_3(board[2][0], board[1][1], board[0][2]):
         return board[1][1] 
 
     if len(available_spots()) == 0:
