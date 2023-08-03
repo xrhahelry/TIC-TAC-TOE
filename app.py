@@ -1,5 +1,7 @@
 from pyray import *
 from box import *
+import random
+from minimax import *
 
 WIDTH, HEIGHT = 300, 300
 init_window(WIDTH, HEIGHT, "TIC TAC TOE")
@@ -10,9 +12,10 @@ for i in range(50, 300, 100):
         space.append(Box(j, i))
 
 pos = Vector2()
-board = [2, 2, 2, 2, 2, 2, 2, 2, 2]
-l = len(space)
-turn = 0
+board = [["", "", ""], ["", "", ""], ["", "", ""]]
+HUMAN = "O"
+AI = "X"
+turn = HUMAN
 
 
 def draw_screen():
@@ -24,97 +27,120 @@ def draw_screen():
 
 def draw_board(board):
     count = 0
-    for i in board:
-        if i != 2:
-            if i == 1:
+    for i in range(0,3):
+        for j in range(0,3):
+            if board[i][j] == AI:
                 space[count].drawX()
-            else:
+            elif board[i][j] == HUMAN:
                 space[count].drawO()
-        count += 1
+            count += 1
 
 
 def turn_change(turn):
-    if turn == 0:
-        return 1
+    if turn == HUMAN:
+        return AI
     else:
-        return 0
+        return HUMAN
+
+
+def equals3(a, b, c):
+    return a == b and b == c and a != ""
 
 
 def check_win(board):
-    if (
-        ((board[0] == board[1] and board[1] == board[2]) and board[0] != 2)
-        or ((board[3] == board[4] and board[4] == board[5]) and board[3] != 2)
-        or ((board[6] == board[7] and board[7] == board[8]) and board[6] != 2)
-    ):
-        return True
-    elif (
-        ((board[0] == board[3] and board[3] == board[6]) and board[0] != 2)
-        or ((board[1] == board[4] and board[4] == board[7]) and board[1] != 2)
-        or ((board[2] == board[5] and board[5] == board[8]) and board[2] != 2)
-    ):
-        return True
-    elif ((board[0] == board[4] and board[4] == board[8]) and board[0] != 2) or (
-        (board[2] == board[4] and board[4] == board[6]) and board[2] != 2
-    ):
-        return True
-    else:
-        return False
+    winner = 0
+    for i in range(0, 3):
+        if equals3(board[0][i], board[1][i], board[2][i]):
+            return board[0][i] 
+
+    for i in range(0, 3):
+        if equals3(board[i][0], board[i][1], board[i][2]):
+            return board[i][0]
+
+    if equals3(board[0][0], board[1][1], board[2][2]):
+        return board[1][1] 
+
+    if equals3(board[2][0], board[1][1], board[0][2]):
+        return board[1][1] 
+
+    if len(available_spots(board)) == 0:
+        return "draw"
+
+
+def available_spots(board):
+    available = []
+    for i in range(0,3):
+        for j in range(0,3):
+            if board[i][j] == "":
+                available.append([i, j])
+    return available
 
 
 while not window_should_close():
     begin_drawing()
     clear_background(WHITE)
     draw_screen()
-    
-    if check_win(board):
-        draw_board(board)
-        if turn == 1:
-            draw_text("Player O won", 20, 120, 40, RED)
-        else:
-            draw_text("Player X won", 20, 120, 40, RED)
-    else:
-        draw_board(board)
-        if is_mouse_button_pressed(0):
-            pos = get_mouse_position()
-            if pos.x < 100:
-                if pos.y < 100:
-                    if board[0] == 2:
-                        board[0] = turn
-                        turn = turn_change(turn)
-                elif pos.y < 200:
-                    if board[3] == 2:
-                        board[3] = turn
-                        turn = turn_change(turn)
-                else:
-                    if board[6] == 2:
-                        board[6] = turn
-                        turn = turn_change(turn)
-            elif pos.x < 200:
-                if pos.y < 100:
-                    if board[1] == 2:
-                        board[1] = turn
-                        turn = turn_change(turn)
-                elif pos.y < 200:
-                    if board[4] == 2:
-                        board[4] = turn
-                        turn = turn_change(turn)
-                else:
-                    if board[7] == 2:
-                        board[7] = turn
-                        turn = turn_change(turn)
+
+    if turn == AI:
+        available = available_spots(board)
+        x, y  = random.choice(available)
+        board[x][y] = AI
+        turn = HUMAN
+
+    draw_board(board)
+    if is_mouse_button_pressed(0):
+        pos = get_mouse_position()
+        if pos.x < 100:
+            if pos.y < 100:
+                if board[0][0] == "":
+                    board[0][0] = turn
+                    turn = "X"
+            elif pos.y < 200:
+                if board[1][0] == "":
+                    board[1][0] = turn
+                    turn = "X"
             else:
-                if pos.y < 100:
-                    if board[2] == 2:
-                        board[2] = turn
-                        turn = turn_change(turn)
-                elif pos.y < 200:
-                    if board[5] == 2:
-                        board[5] = turn
-                        turn = turn_change(turn)
-                else:
-                    if board[8] == 2:
-                        board[8] = turn
-                        turn = turn_change(turn)
+                if board[2][0] == "":
+                    board[2][0] = turn
+                    turn = "X"
+        elif pos.x < 200:
+            if pos.y < 100:
+                if board[0][1] == "":
+                    board[0][1] = turn
+                    turn = "X"
+            elif pos.y < 200:
+                if board[1][1] == "":
+                    board[1][1] = turn
+                    turn = "X"
+            else:
+                if board[2][1] == "":
+                    board[2][1] = turn
+                    turn = "X"
+        else:
+            if pos.y < 100:
+                if board[0][2] == "":
+                    board[0][2] = turn
+                    turn = "X"
+            elif pos.y < 200:
+                if board[1][2] == "":
+                    board[1][2] = turn
+                    turn = "X"
+            else:
+                if board[2][2] == "":
+                    board[2][2] = turn
+                    turn = "X"
+
+
+    draw_board(board)
+    if check_win(board) == AI:
+        draw_text("Player X won", 20, 120, 40, RED)
+        turn = 0
+    elif check_win(board) == HUMAN:
+        draw_text("Player O won", 20, 120, 40, RED)
+        turn = 0
+    elif check_win(board) == "draw":
+        draw_text("Draw", 60, 120, 40, RED) 
+        turn = 0
 
     end_drawing()
 close_window()

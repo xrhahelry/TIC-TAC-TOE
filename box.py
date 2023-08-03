@@ -7,7 +7,10 @@ class Box:
         self.y = y
 
     def drawO(self):
-        draw_ring((self.x, self.y), 40.0, 30.0, 0.0, 360.0, 0, BLACK)
+        draw_circle_lines(self.x, self.y, 45.0, BLACK)
+        draw_circle_lines(self.x, self.y, 44.0, BLACK)
+        draw_circle_lines(self.x, self.y, 43.0, BLACK)
+        draw_circle_lines(self.x, self.y, 42.0, BLACK)
 
     def drawX(self):
         c = 40
