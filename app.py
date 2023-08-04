@@ -43,7 +43,6 @@ while not window_should_close():
 
     if turn == AI:
         move = best_move(board)
-        count = 1
         board[move[0]][move[1]] = AI
         turn = HUMAN
 
