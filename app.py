@@ -97,7 +97,7 @@ while not window_should_close():
         draw_text("Player O won", 20, 120, 40, RED)
         turn = 0
     elif check_win(board) == "draw":
-        draw_text("Draw", 60, 120, 40, RED) 
+        draw_text("Draw", 100, 120, 40, RED) 
         turn = 0
 
     end_drawing()
